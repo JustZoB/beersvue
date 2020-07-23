@@ -1,28 +1,38 @@
+
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <BeerList v-bind:list="list"></BeerList>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+const axios = require('axios');
+import BeerList from './components/BeerList.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    BeerList
+  },
+  data () {
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    axios
+      .get('https://api.punkapi.com/v2/beers?page=1&limit=25')
+      .then(response => {
+        this.list = response.data
+        console.log(this.list);
+      })
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+#id {
+  display: flex;
+  justify-content: center;
 }
 </style>
