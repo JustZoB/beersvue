@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <BeerList v-bind:list="list" @deleteBeer="deleteBeer"></BeerList>
-    <ShowNext @next="next"></ShowNext>
+    <ShowNext @next="next" v-bind:style="styleShowNext" v-bind:buttonText="buttonText"></ShowNext>
     <Overlay @applyEdit="applyEdit"></Overlay>
   </div>
 </template>
@@ -22,7 +22,9 @@ export default {
   data () {
     return {
       list: [],
-      page: 1
+      page: 1,
+      buttonText: 'Show Text',
+      styleShowNext: { display: 'flex' }
     }
   },
   mounted() {
@@ -38,11 +40,17 @@ export default {
     },
     next() {
       this.page++;
+      this.buttonText = "Loading.."
       axios
         .get(`https://api.punkapi.com/v2/beers?page=${this.page}&limit=25`)
         .then(response => {
-          this.list = this.list.concat(response.data);
-        })
+          if (response.data.length != 0) {
+            this.list = this.list.concat(response.data);
+          } else {
+            this.styleShowNext = { display: 'none' };
+          }
+        });
+      this.buttonText = "Show Text"
     },
     applyEdit(id, name, description) {
       this.list[id - 1].name = name;

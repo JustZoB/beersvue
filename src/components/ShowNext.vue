@@ -1,6 +1,6 @@
 <template>
     <div class="next__wrap">
-        <button @click="$emit('next')" class="next">Show next</button>
+        <button @click="$emit('next')" class="next">{{ buttonText }}</button>
     </div>
 </template>
 
@@ -8,6 +8,7 @@
 
 export default {
   name: "ShowNext",
+  props: ['buttonText'],
   methods: {
     deleteBeer(id) {
         this.$emit('deleteBeer', id)
