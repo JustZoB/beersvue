@@ -1,8 +1,8 @@
-
 <template>
   <div id="app">
     <BeerList v-bind:list="list" @deleteBeer="deleteBeer"></BeerList>
     <ShowNext @next="next"></ShowNext>
+    <Overlay @applyEdit="applyEdit"></Overlay>
   </div>
 </template>
 
@@ -10,11 +10,13 @@
 const axios = require('axios');
 import BeerList from './components/BeerList.vue'
 import ShowNext from './components/ShowNext.vue'
+import Overlay from './components/Overlay.vue'
 
 export default {
   name: 'App',
   components: {
     BeerList,
+    Overlay,
     ShowNext
   },
   data () {
@@ -41,14 +43,15 @@ export default {
         .then(response => {
           this.list = this.list.concat(response.data);
         })
+    },
+    applyEdit(id, name, description) {
+      this.list[id - 1].name = name;
+      this.list[id - 1].description = description;
     }
   }
 }
 </script>
 
 <style scoped>
-#id {
-  display: flex;
-  justify-content: center;
-}
+
 </style>

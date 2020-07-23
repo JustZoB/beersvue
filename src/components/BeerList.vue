@@ -21,7 +21,7 @@ export default {
   methods: {
     deleteBeer(id) {
         this.$emit('deleteBeer', id)
-    }
+    },
   }
 }
 </script>
@@ -31,6 +31,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     max-width: 1266px;
+    margin: auto;
 }
 @media (max-width: 1290px) {
     .beerlist {

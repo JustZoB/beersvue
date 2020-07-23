@@ -6,17 +6,24 @@
     <h2 class='name'>{{ elem.name }}</h2>
     <p class='description'>{{ elem.description }}</p>
     <p class='brewers_tips'>{{ elem.brewers_tips }}</p>
-    <button class="edit">Edit</button>
+    <button @click="edit" class="edit">Edit</button>
   </div>
 </template>
 
 <script>
+import { bus } from '../main';
+
 export default {
   name: "Beer",
   props: {
     elem: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    edit() {
+      bus.$emit('edit', this.elem)
     }
   }
 }
@@ -31,6 +38,7 @@ export default {
   margin: 5px;
 }
 .id {
+  margin: 0;
   position: absolute;
   left: 20px;
   top: 20px;
