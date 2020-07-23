@@ -4,6 +4,7 @@
         v-for="elem of list" 
         :key="elem.id"
         :elem="elem"
+        @delete="deleteBeer"
     />
   </div>
 </template>
@@ -17,6 +18,11 @@ export default {
   components: {
     Beer
   },
+  methods: {
+    deleteBeer(id) {
+        this.$emit('deleteBeer', id)
+    }
+  }
 }
 </script>
 

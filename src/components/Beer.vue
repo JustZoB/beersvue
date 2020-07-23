@@ -1,7 +1,7 @@
 <template>
   <div class='beer'>
     <p class='id'>{{ elem.id }}</p>
-    <button class="close" title="Delete"></button>
+    <button @click="$emit('delete', elem.id)" class="close" title="Delete"><i class="fas fa-times fa-2x"></i></button>
     <div class='image'><img :src="elem.image_url" alt="Beer image"></div>
     <h2 class='name'>{{ elem.name }}</h2>
     <p class='description'>{{ elem.description }}</p>

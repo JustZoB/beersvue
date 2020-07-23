@@ -1,7 +1,7 @@
 
 <template>
   <div id="app">
-    <BeerList v-bind:list="list"></BeerList>
+    <BeerList v-bind:list="list" @deleteBeer="deleteBeer"></BeerList>
   </div>
 </template>
 
@@ -26,6 +26,11 @@ export default {
         this.list = response.data
         console.log(this.list);
       })
+  },
+  methods: {
+    deleteBeer(id) {
+      this.list = this.list.filter(t => t.id !== id)
+    }
   }
 }
 </script>
