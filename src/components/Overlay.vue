@@ -1,40 +1,34 @@
 <template>
-  <div id="overlay" v-bind:style="styleOverlay">
+  <div id="overlay">
     <div id="modal">
-      <textarea rows="1" cols="45" class="textarea_name" v-model="name"></textarea>
-      <textarea rows="10" cols="45" class="textarea_description" v-model="description"></textarea>
+      <textarea rows="1" cols="45" class="textarea_name" v-model="dataValue.name"></textarea>
+      <textarea rows="10" cols="45" class="textarea_description" v-model="dataValue.description"></textarea>
       <button @click="applyEdit" class="applyEdit">Apply edit</button>
     </div>
   </div>
 </template>
 
 <script>
-import { bus } from '../main';
-
 export default {
-  name: 'Overlay',
-  components: {
+  name: "Overlay",
+  props: {
+    data: {
+      type: Object
+    }
   },
   data() {
     return {
-      styleOverlay: { display: 'none' },
-      id: '',
-      name: '',
-      description: ''
+      dataValue: {}
     }
   },
-  created() {
-    bus.$on('edit', elem => {
-      this.styleOverlay = { display: 'block' };
-      this.id = elem.id;
-      this.name = elem.name;
-      this.description = elem.description;
-    })
+  watch: {
+    data(data) {
+      this.dataValue = { ...data }
+    }
   },
   methods: {
     applyEdit() {
-      this.styleOverlay = { display: 'none' };
-      this.$emit('applyEdit', this.id, this.name, this.description);
+      this.$emit("applyEdit", this.dataValue);
     }
   }
 }

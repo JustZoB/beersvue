@@ -1,17 +1,16 @@
 <template>
-  <div class='beer'>
-    <p class='id'>{{ elem.id }}</p>
-    <button @click="$emit('delete', elem.id)" class="close" title="Delete"><i class="fas fa-times fa-2x"></i></button>
-    <div class='image'><img :src="elem.image_url" alt="Beer image"></div>
-    <h2 class='name'>{{ elem.name }}</h2>
-    <p class='description'>{{ elem.description }}</p>
-    <p class='brewers_tips'>{{ elem.brewers_tips }}</p>
+  <div class="beer">
+    <p class="id">{{ elem.id }}</p>
+    <button @click="remove" class="close" title="Delete"><i class="fas fa-times fa-2x"></i></button>
+    <div class="image"><img :src="elem.image_url" alt="Beer image"></div>
+    <h2 class="name">{{ elem.name }}</h2>
+    <p class="description">{{ elem.description }}</p>
+    <p class="brewers_tips">{{ elem.brewers_tips }}</p>
     <button @click="edit" class="edit">Edit</button>
   </div>
 </template>
 
 <script>
-import { bus } from '../main';
 
 export default {
   name: "Beer",
@@ -23,7 +22,10 @@ export default {
   },
   methods: {
     edit() {
-      bus.$emit('edit', this.elem)
+      this.$emit("edit", this.elem)
+    },
+    remove() {
+      this.$emit("remove", this.elem.id)
     }
   }
 }

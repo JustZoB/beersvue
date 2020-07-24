@@ -1,41 +1,53 @@
 <template>
   <div id="app">
-    <BeerList v-bind:list="list" @deleteBeer="deleteBeer"></BeerList>
-    <ShowNext @next="next" v-bind:style="styleShowNext" v-bind:buttonText="buttonText"></ShowNext>
-    <Overlay @applyEdit="applyEdit"></Overlay>
+    <div class="beerlist">
+      <Beer 
+        v-for="elem of list" 
+        :key="elem.id"
+        :elem="elem"
+        @remove="removeBeer"
+        @edit="startEdit"
+      />
+    </div>
+    <div class="next" v-show="visibleShowNext">
+      <button class="next__button" @click="next" :buttonText="buttonText">
+        {{ buttonText }}
+      </button>
+    </div>
+    <Overlay @applyEdit="applyEdit" :data="beerToUpdate" v-show="visibleOverlay"></Overlay>
   </div>
 </template>
 
 <script>
-const axios = require('axios');
-import BeerList from './components/BeerList.vue'
-import ShowNext from './components/ShowNext.vue'
-import Overlay from './components/Overlay.vue'
+import axios from "axios"
+import Beer from "./components/Beer.vue"
+import Overlay from "./components/Overlay.vue"
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    BeerList,
-    Overlay,
-    ShowNext
+    Beer,
+    Overlay
   },
   data () {
     return {
       list: [],
+      beerToUpdate: {},
       page: 1,
-      buttonText: 'Show Text',
-      styleShowNext: { display: 'flex' }
+      buttonText: "Show Next",
+      visibleOverlay: false,
+      visibleShowNext: true
     }
   },
   mounted() {
     axios
-      .get('https://api.punkapi.com/v2/beers?page=1&limit=25')
+      .get("https://api.punkapi.com/v2/beers?page=1&limit=25")
       .then(response => {
         this.list = response.data
       })
   },
   methods: {
-    deleteBeer(id) {
+    removeBeer(id) {
       this.list = this.list.filter(t => t.id !== id)
     },
     next() {
@@ -47,19 +59,54 @@ export default {
           if (response.data.length != 0) {
             this.list = this.list.concat(response.data);
           } else {
-            this.styleShowNext = { display: 'none' };
+            this.visibleShowNext = false
           }
         });
-      this.buttonText = "Show Text"
+      this.buttonText = "Show Next"
     },
-    applyEdit(id, name, description) {
-      this.list[id - 1].name = name;
-      this.list[id - 1].description = description;
+    startEdit(beer) {
+      this.beerToUpdate = beer
+      this.visibleOverlay = true
+    },
+    applyEdit(beer) {
+      const index = this.list.findIndex(t => t.id === beer.id);
+
+      if (index === -1) {
+        console.error("This beer not found")
+        return
+      }
+      
+      this.list[index] = beer
+      this.visibleOverlay = false
     }
   }
 }
 </script>
 
 <style scoped>
-
+.beerlist {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1266px;
+  margin: auto;
+}
+@media (max-width: 1290px) {
+  .beerlist {
+    max-width: 845px;
+  }    
+}
+@media (max-width: 860px) {
+  .beerlist {
+    max-width: 420px;
+  }  
+}
+.next {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;  
+}
+.next__button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
 </style>
